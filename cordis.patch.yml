@@ -1,0 +1,35 @@
+# dsh-wecom-notify 的 profile 层。
+#
+# 安装（`plugin_manager` 的 install_bundle / `dsh plugin add <本包>`）会把本包
+# 记入 profile 的 bundles，并把这个 patch 纳入层栈，于是下面的 insert 会把通知
+# 插件挂进该 profile。
+#
+# 也可以不用 bundle，手工把这段 insert 抄进 <profile>/cordis.patch.yml。
+#
+# 带 `.volatile()` 的字段可以在 Web 侧栏「插件」页 → 本包 → 配置 里直接改；
+# 其余字段是调优项，只从配置文件 / 环境变量读取。
+- insert:
+    - id: wecom-notify
+      name: dsh-wecom-notify
+      config:
+        # 企业微信群机器人 Webhook（群设置 → 群机器人 → 添加 → 复制 Webhook 地址）。
+        # 留空则回落到环境变量 WECOM_WEBHOOK_URL；两处都空时插件静默待机。
+        webhookUrl: 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=c4e5d804-3454-491a-86b0-b4e4b8147e91'
+
+        # ---- 以下字段可在浏览器里改 ----
+        enabled: true
+        # markdown 支持标题/引用/加粗（上限 4096 字节）；text 是纯文本（上限 2048 字节，可 @所有人）
+        format: markdown
+        mentionAll: false
+        includeContent: true
+        notifyFailures: true
+        notifySubagents: false
+
+        # ---- 以下字段只从配置读取（调优用）----
+        # turn/end 之后等多久再发：用于把紧接着的下一轮（例如目标续跑）合并掉；
+        # 设 0 表示立即发送。
+        settleMs: 800
+        timeoutMs: 10000
+        maxAttempts: 3
+        retryDelayMs: 1000
+        minIntervalMs: 300

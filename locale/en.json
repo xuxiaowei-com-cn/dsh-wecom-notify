@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "WeCom Task Notifier",
+    "description": "Pushes a WeCom group-robot message with the session, request and result when a task finishes."
+  }
+}
